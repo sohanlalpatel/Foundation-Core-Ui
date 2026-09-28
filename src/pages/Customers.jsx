@@ -1,8 +1,8 @@
 import { useState } from "react";
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
-import CustomerModal from "../components/CustomerModel";
-
+import AddCustomerModal from "../components/AddCustomerModal";
+import CustomerModal from "../components/CustomerModal";
 import { customers as initialCustomers } from "../data/customers";
 
 function Customers() {
@@ -11,7 +11,7 @@ function Customers() {
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [selectedCustomer, setSelectedCustomer] = useState(null);
-
+  const [showAddModal, setShowAddModal] = useState(false);
   const filteredCustomers = customers.filter((customer) => {
     const matchesSearch =
       customer.name.toLowerCase().includes(search.toLowerCase()) ||
@@ -22,17 +22,8 @@ function Customers() {
     return matchesSearch && matchesStatus;
   });
 
-  const handleAddCustomer = () => {
-    const newCustomer = {
-      id: Date.now(),
-      name: "New Customer",
-      email: "newcustomer@gmail.com",
-      phone: "9999999999",
-      status: "Active",
-      service: "Web Development",
-    };
-
-    setCustomers([...customers, newCustomer]);
+  const addCustomer = (newCustomer) => {
+    setCustomers((currentCustomers) => [...currentCustomers, newCustomer]);
   };
 
   return (
@@ -64,7 +55,7 @@ function Customers() {
               </select>
 
               <button
-                onClick={handleAddCustomer}
+                onClick={() => setShowAddModal(true)}
                 className="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700"
               >
                 + Add Customer
@@ -72,7 +63,7 @@ function Customers() {
             </div>
           </div>
 
-           <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
+          <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
             <div className="p-5 border-b">
               <h3 className="text-lg font-semibold">Customer List</h3>
             </div>
@@ -121,7 +112,7 @@ function Customers() {
             </div>
           </div>
 
-           {filteredCustomers.length === 0 && (
+          {filteredCustomers.length === 0 && (
             <p className="text-center text-slate-500 mt-6">
               No customers found.
             </p>
@@ -129,10 +120,17 @@ function Customers() {
         </main>
       </div>
 
-       {selectedCustomer && (
+      {selectedCustomer && (
         <CustomerModal
           customer={selectedCustomer}
           onClose={() => setSelectedCustomer(null)}
+        />
+      )}
+
+      {showAddModal && (
+        <AddCustomerModal
+          onClose={() => setShowAddModal(false)}
+          onAdd={addCustomer}
         />
       )}
     </div>

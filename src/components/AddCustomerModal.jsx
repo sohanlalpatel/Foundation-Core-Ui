@@ -1,0 +1,128 @@
+import { useState } from "react";
+
+function AddCustomerModal({ onClose, onAdd }) {
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [phone, setPhone] = useState("");
+  const [service, setService] = useState("");
+  const [status, setStatus] = useState("Active");
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    if (!name || !email || !phone || !service) {
+      return;
+    }
+
+    const newCustomer = {
+      id: Date.now(),
+      name,
+      email,
+      phone,
+      status,
+      service,
+    };
+
+    onAdd(newCustomer);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
+      <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
+        <div className="mb-5 flex items-center justify-between">
+          <h2 className="text-xl font-semibold">Add Customer</h2>
+
+          <button
+            type="button"
+            onClick={onClose}
+            className="text-xl text-slate-500 hover:text-black"
+          >
+            ✕
+          </button>
+        </div>
+
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="mb-1 block text-sm font-medium">Name</label>
+
+            <input
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              placeholder="Enter customer name"
+              className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">Email</label>
+
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              placeholder="Enter email"
+              className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">Phone</label>
+
+            <input
+              type="tel"
+              value={phone}
+              onChange={(e) => setPhone(e.target.value)}
+              placeholder="Enter phone number"
+              className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+          <div>
+            <label className="mb-1 block text-sm font-medium">Service</label>
+
+            <input
+              type="text"
+              value={service}
+              onChange={(e) => setService(e.target.value)}
+              placeholder="Enter Service"
+              className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
+            />
+          </div>
+
+          <div>
+            <label className="mb-1 block text-sm font-medium">Status</label>
+
+            <select
+              value={status}
+              onChange={(e) => setStatus(e.target.value)}
+              className="w-full rounded-lg border px-4 py-2.5 outline-none"
+            >
+              <option value="Active">Active</option>
+              <option value="Inactive">Inactive</option>
+            </select>
+          </div>
+
+          <div className="flex justify-end gap-3 pt-3">
+            <button
+              type="button"
+              onClick={onClose}
+              className="rounded-lg border px-4 py-2.5"
+            >
+              Cancel
+            </button>
+
+            <button
+              type="submit"
+              className="rounded-lg bg-blue-600 px-4 py-2.5 text-white hover:bg-blue-700"
+            >
+              Add Customer
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+export default AddCustomerModal;

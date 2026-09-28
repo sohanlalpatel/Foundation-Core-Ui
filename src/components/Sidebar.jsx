@@ -1,3 +1,4 @@
+import { LayoutDashboard, LogOutIcon, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
@@ -20,7 +21,7 @@ function Sidebar() {
 
   return (
     <>
-       <button
+      <button
         onClick={() => setIsOpen(!isOpen)}
         className={`
           fixed top-4 z-50
@@ -40,14 +41,14 @@ function Sidebar() {
         {isOpen ? "✕" : "☰"}
       </button>
 
-       {isOpen && (
+      {isOpen && (
         <div
           onClick={closeSidebar}
           className="fixed inset-0 z-30 bg-black/40 md:hidden"
         ></div>
       )}
 
-       <aside
+      <aside
         className={`
           fixed left-0 top-0 z-40
           h-screen w-64
@@ -59,14 +60,14 @@ function Sidebar() {
           md:translate-x-0
         `}
       >
-         <h1 className="mb-10 text-2xl font-bold">ServiceDesk</h1>
+        <h1 className="mb-10 text-2xl font-bold">ServiceDesk</h1>
 
-         <nav className="space-y-2">
+        <nav className="space-y-2 ">
           <Link
             to="/dashboard"
             onClick={closeSidebar}
-            className={`
-              block rounded-lg px-4 py-3
+            className={` flex items-center gap-3
+               rounded-lg px-3 py-3
               ${
                 location.pathname === "/dashboard"
                   ? "bg-blue-200"
@@ -74,14 +75,14 @@ function Sidebar() {
               }
             `}
           >
-            Dashboard
+            <LayoutDashboard size={20} />
+            <span>Dashboard</span>{" "}
           </Link>
 
           <Link
             to="/customers"
             onClick={closeSidebar}
-            className={`
-              block rounded-lg px-4 py-3
+            className={`rounded-lg px-4 py-3 flex items-center gap-3
               ${
                 location.pathname === "/customers"
                   ? "bg-blue-200"
@@ -89,11 +90,11 @@ function Sidebar() {
               }
             `}
           >
-            Customers
+          <UserCheck/>  Customers
           </Link>
         </nav>
 
-         <div className="absolute bottom-5 left-5 right-5">
+        <div className="absolute bottom-5 left-5 right-5 ">
           <button
             onClick={handleLogout}
             className="
@@ -103,10 +104,10 @@ function Sidebar() {
               text-left
               text-red-500
               hover:bg-red-50
-              hover:text-red-600
+              hover:text-red-600 flex items-center gap-3
             "
           >
-            Logout
+            <LogOutIcon size={20} /> <span>Logout</span>
           </button>
         </div>
       </aside>
