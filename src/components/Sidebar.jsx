@@ -2,7 +2,7 @@ import { LayoutDashboard, LogOutIcon, UserCheck } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 
-function Sidebar() {
+function Sidebar({ setIsLoggedIn }) {
   const location = useLocation();
   const navigate = useNavigate();
 
@@ -11,6 +11,7 @@ function Sidebar() {
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
+    setIsLoggedIn(false);
 
     navigate("/login");
   };
@@ -86,7 +87,7 @@ function Sidebar() {
               }
             `}
           >
-          <UserCheck/>  Customers
+            <UserCheck /> Customers
           </Link>
         </nav>
 

@@ -2,8 +2,8 @@ import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function Login() {
-  const navigate = useNavigate();
+function Login({ setIsLoggedIn }) {
+    const navigate = useNavigate();
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -37,7 +37,10 @@ const handleLogin = (e) => {
   localStorage.setItem("isLoggedIn", "true");
   localStorage.setItem("user", JSON.stringify(user));
 
-  navigate("/dashboard");
+  setIsLoggedIn(true);
+
+   navigate("/dashboard");
+ 
 };
 
   return (

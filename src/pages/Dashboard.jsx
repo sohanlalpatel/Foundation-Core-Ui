@@ -9,7 +9,7 @@ import DataTable from "../components/DataTable";
 import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
  
-function Dashboard() {
+function Dashboard({ setIsLoggedIn }) {
   const [dateFilter, setDateFilter] = useState("Today");
   const [requestSearch, setRequestSearch] = useState("");
   const [requestStatus, setRequestStatus] = useState("All");
@@ -79,7 +79,7 @@ function Dashboard() {
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Sidebar />
+      <Sidebar setIsLoggedIn={setIsLoggedIn} />
 
       <div className="md:ml-64">
         <Header title="Dashboard" user={user} />
@@ -196,8 +196,7 @@ function Dashboard() {
           </div>
         </main>
       </div>
-    
-     </div>
+    </div>
   );
 }
 
