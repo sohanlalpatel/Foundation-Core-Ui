@@ -12,8 +12,7 @@ function App() {
 
   return (
     <Routes>
-      {/* Root */}
-      <Route
+       <Route
         path="/"
         element={
           isLoggedIn ? (
@@ -24,8 +23,7 @@ function App() {
         }
       />
 
-      {/* Login */}
-      <Route
+       <Route
         path="/login"
         element={
           isLoggedIn ? (
@@ -36,8 +34,7 @@ function App() {
         }
       />
 
-      {/* Dashboard */}
-      <Route
+       <Route
         path="/dashboard"
         element={
           isLoggedIn ? (
@@ -48,8 +45,7 @@ function App() {
         }
       />
 
-      {/* Customers */}
-      <Route
+       <Route
         path="/customers"
         element={
           isLoggedIn ? (
@@ -60,8 +56,7 @@ function App() {
         }
       />
 
-      {/* Unknown URL */}
-      <Route path="*" element={<Navigate to="/login" replace />} />
+       <Route path="*" element={<Navigate to="/login" replace />} />
     </Routes>
   );
 }
