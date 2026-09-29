@@ -23,11 +23,7 @@ function Sidebar() {
     <>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className={`
-          fixed top-4 z-50
-          h-9 w-9
-          rounded-lg
-          flex items-center justify-center
+        className={`fixed top-4 z-50 h-9 w-9 rounded-lg flex items-center justify-center
           text-lg
           transition-all duration-300
           ${

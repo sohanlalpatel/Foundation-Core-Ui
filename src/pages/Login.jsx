@@ -10,24 +10,35 @@ function Login() {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+const handleLogin = (e) => {
+  e.preventDefault();
 
-    if (!email || !password) {
-      setError("Email and password are required.");
-      return;
-    }
+  setError("");
 
-    if (!email.includes("@")) {
-      setError("Please enter a valid email.");
-      return;
-    }
+  if (!email) {
+    setError("Email is required.");
+    return;
+  }
 
-    setError("");
-    localStorage.setItem("isLoggedIn", "true");
+  if (!email.includes("@")) {
+    setError("Please enter a valid email address.");
+    return;
+  }
 
-    navigate("/dashboard");
+  if (!password) {
+    setError("Password is required.");
+    return;
+  }
+
+  const user = {
+     email: email,
   };
+
+  localStorage.setItem("isLoggedIn", "true");
+  localStorage.setItem("user", JSON.stringify(user));
+
+  navigate("/dashboard");
+};
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-5">

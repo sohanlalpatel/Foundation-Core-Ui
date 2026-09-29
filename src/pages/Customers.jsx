@@ -1,132 +1,212 @@
-import { useState } from "react";
-import Sidebar from "../components/Sidebar";
-import Header from "../components/Header";
+import { useEffect, useState } from "react";
+import { customers as initialCustomers } from "../data/customers";
+
+import PageHeader from "../components/PageHeader";
+import TableToolbar from "../components/TableToolbar";
+import DataTable from "../components/DataTable";
+import StatusBadge from "../components/StatusBadge";
+
 import AddCustomerModal from "../components/AddCustomerModal";
 import CustomerModal from "../components/CustomerModal";
-import { customers as initialCustomers } from "../data/customers";
 
 function Customers() {
   const [customers, setCustomers] = useState(initialCustomers);
-
   const [search, setSearch] = useState("");
   const [status, setStatus] = useState("All");
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [showAddModal, setShowAddModal] = useState(false);
+  const [successMessage, setSuccessMessage] = useState("");
+  const [loading, setLoading] = useState(true);
+ 
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 800);
+
+    return () => clearTimeout(timer);
+  }, []);
+
+ 
   const filteredCustomers = customers.filter((customer) => {
+    const searchText = search.toLowerCase().trim();
+
     const matchesSearch =
-      customer.name.toLowerCase().includes(search.toLowerCase()) ||
-      customer.email.toLowerCase().includes(search.toLowerCase());
+      customer.name.toLowerCase().includes(searchText) ||
+      customer.email.toLowerCase().includes(searchText) ||
+      customer.phone.includes(searchText);
 
     const matchesStatus = status === "All" || customer.status === status;
-
     return matchesSearch && matchesStatus;
   });
 
+ 
   const addCustomer = (newCustomer) => {
     setCustomers((currentCustomers) => [...currentCustomers, newCustomer]);
+    setShowAddModal(false);
+    setSuccessMessage("Customer added successfully.");
+    setTimeout(() => {
+      setSuccessMessage("");
+    }, 3000);
   };
+
+ 
+  const customerColumns = [
+    {
+      header: "Name",
+      accessor: "name",
+
+      render: (customer) => (
+        <span className="font-medium text-slate-800">{customer.name}</span>
+      ),
+    },
+    {
+      header: "Email",
+      accessor: "email",
+    },
+    {
+      header: "Phone",
+      accessor: "phone",
+    },
+    {
+      header: "Status",
+      accessor: "status",
+      render: (customer) => <StatusBadge status={customer.status} />,
+    },
+
+    {
+      header: "Action",
+      accessor: "action",
+
+      render: (customer) => (
+        <button
+          onClick={() => {e.stopPropagation(); 
+            setSelectedCustomer(customer)}}
+          className="
+            text-sm
+            font-medium
+            text-blue-600
+            hover:text-blue-700
+            transition
+          "
+        >
+          View Details
+        </button>
+      ),
+    },
+  ];
+
+ 
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-slate-100 flex items-center justify-center">
+        <div className="text-center">
+          <div
+            className="
+            mx-auto
+            h-8
+            w-8
+            animate-spin
+            rounded-full
+            border-4
+            border-slate-200
+            border-t-blue-600
+          "
+          />
+
+          <p className="mt-3 text-sm text-slate-500">Loading customers...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-slate-100">
-      <Sidebar />
+      <main className="p-4 md:p-6">
+        <PageHeader
+          title="Customers"
+          description="Manage and view all your customers."
+          actionLabel="Add Customer"
+          onAction={() => setShowAddModal(true)}
+        />
+        {successMessage && (
+          <div
+            className="mb-5 flex  items-center justify-between rounded-lg  border border-green-200 bg-green-50 px-4 py-3  text-s text-green-700">
+            <span>{successMessage}</span>
 
-      <div className="md:ml-64">
-        <Header title="Customers" />
+            <button
+              onClick={() => setSuccessMessage("")}
+              className="text-green-600 hover:text-green-800"
+            >
+              ✕
+            </button>
+          </div>
+        )}
 
-        <main className="p-4 pt-20 md:p-6 md:pt-6">
-          <div className="flex flex-col md:flex-row gap-4 justify-between mb-6">
-            <input
-              type="text"
-              placeholder="Search customers..."
-              value={search}
-              onChange={(e) => setSearch(e.target.value)}
-              className="border bg-white rounded-lg px-4 py-3 w-full md:w-80 outline-none focus:ring-2 focus:ring-blue-500"
+        <div className="rounded-xl bg-white shadow-sm">
+          <div className="border-b border-slate-100 p-4">
+            <TableToolbar
+              search={search}
+              setSearch={setSearch}
+              searchPlaceholder="Search customers..."
+              filterValue={status}
+              setFilterValue={setStatus}
+              filterOptions={[
+                {
+                  value: "All",
+                  label: "All Status",
+                },
+                {
+                  value: "Active",
+                  label: "Active",
+                },
+                {
+                  value: "Inactive",
+                  label: "Inactive",
+                },
+              ]}
             />
+          </div>
 
-            <div className="flex gap-3">
-              <select
-                value={status}
-                onChange={(e) => setStatus(e.target.value)}
-                className="border bg-white rounded-lg px-4 py-3"
-              >
-                <option value="All">All Status</option>
-                <option value="Active">Active</option>
-                <option value="Inactive">Inactive</option>
-              </select>
-
-              <button
-                onClick={() => setShowAddModal(true)}
-                className="bg-blue-600 text-white px-5 py-3 rounded-lg hover:bg-blue-700"
-              >
-                + Add Customer
-              </button>
+          <div
+            className="
+            flex
+            items-center
+            justify-between
+            px-5
+            py-4
+          "
+          >
+            <div>
+              <h2 className="font-semibold text-slate-800">Customer List</h2>
+              <p className="mt-1 text-xs text-slate-500">
+                {filteredCustomers.length} customers
+              </p>
             </div>
           </div>
 
-          <div className="bg-white rounded-xl border shadow-sm overflow-hidden">
-            <div className="p-5 border-b">
-              <h3 className="text-lg font-semibold">Customer List</h3>
+          {filteredCustomers.length > 0 ? (
+            <DataTable
+              columns={customerColumns}
+              data={filteredCustomers}
+              onRowClick={(customer) => setSelectedCustomer(customer)}
+            />
+          ) : (
+            <div className="px-6 py-12 text-center">
+              <h3 className="font-medium text-slate-700">No customers found</h3>
+
+              <p className="mt-1 text-sm text-slate-500">
+                Try changing your search or status filter.
+              </p>
             </div>
-
-            <div className="overflow-x-auto">
-              <table className="w-full text-left">
-                <thead className="bg-slate-50">
-                  <tr>
-                    <th className="p-4">Name</th>
-                    <th className="p-4">Email</th>
-                    <th className="p-4">Phone</th>
-                    <th className="p-4">Status</th>
-                    <th className="p-4">Action</th>
-                  </tr>
-                </thead>
-
-                <tbody>
-                  {filteredCustomers.map((customer) => (
-                    <tr key={customer.id} className="border-t">
-                      <td className="p-4 font-medium">{customer.name}</td>
-                      <td className="p-4">{customer.email}</td>
-                      <td className="p-4">{customer.phone}</td>
-                      <td className="p-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-sm ${
-                            customer.status === "Active"
-                              ? "bg-green-100 text-green-700"
-                              : "bg-gray-100 text-gray-700"
-                          }`}
-                        >
-                          {customer.status}
-                        </span>
-                      </td>
-                      <td className="p-4">
-                        <button
-                          onClick={() => setSelectedCustomer(customer)}
-                          className="text-blue-600 hover:underline"
-                        >
-                          View Details
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-
-          {filteredCustomers.length === 0 && (
-            <p className="text-center text-slate-500 mt-6">
-              No customers found.
-            </p>
           )}
-        </main>
-      </div>
-
+        </div>
+      </main>
       {selectedCustomer && (
         <CustomerModal
           customer={selectedCustomer}
           onClose={() => setSelectedCustomer(null)}
         />
       )}
-
       {showAddModal && (
         <AddCustomerModal
           onClose={() => setShowAddModal(false)}

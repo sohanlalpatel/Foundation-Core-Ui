@@ -6,24 +6,50 @@ function AddCustomerModal({ onClose, onAdd }) {
   const [phone, setPhone] = useState("");
   const [service, setService] = useState("");
   const [status, setStatus] = useState("Active");
-
+  const [error, setError] = useState("");
   const handleSubmit = (e) => {
     e.preventDefault();
+    setError("");
+  if (!name.trim()) {
+    setError("Name is required.");
+    return;
+  }
 
-    if (!name || !email || !phone || !service) {
-      return;
-    }
+  if (!email.trim()) {
+    setError("Email is required.");
+    return;
+  }
 
-    const newCustomer = {
-      id: Date.now(),
-      name,
-      email,
-      phone,
-      status,
-      service,
-    };
+  if (!email.includes("@")) {
+    setError("Please enter a valid email.");
+    return;
+  }
 
-    onAdd(newCustomer);
+  if (!phone.trim()) {
+    setError("Phone number is required.");
+    return;
+  }
+
+  if (!/^[0-9]{10}$/.test(phone)) {
+    setError("Phone number must be 10 digits.");
+    return;
+  }
+
+   if (!service.trim()) {
+     setError("service is required.");
+     return;
+   }
+
+ onAdd({
+   id: Date.now(),
+   name: name.trim(),
+   email: email.trim(),
+   phone: phone.trim(),
+   service: service.trim(),
+   status,
+ });
+
+    // onAdd(newCustomer);
     onClose();
   };
 
@@ -41,15 +67,21 @@ function AddCustomerModal({ onClose, onAdd }) {
             ✕
           </button>
         </div>
-
+        {error && (
+          <div className="mb-4 rounded-lg bg-red-50 border border-red-200 px-4 py-3 text-sm text-red-700">
+            {error}
+          </div>
+        )}
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="mb-1 block text-sm font-medium">Name</label>
-
             <input
               type="text"
               value={name}
-              onChange={(e) => setName(e.target.value)}
+              onChange={(e) => {
+                setName(e.target.value);
+                if (error) setError("");
+              }}
               placeholder="Enter customer name"
               className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -61,7 +93,10 @@ function AddCustomerModal({ onClose, onAdd }) {
             <input
               type="email"
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={(e) => {
+                setEmail(e.target.value);
+                if (error) setError("");
+              }}
               placeholder="Enter email"
               className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -73,7 +108,10 @@ function AddCustomerModal({ onClose, onAdd }) {
             <input
               type="tel"
               value={phone}
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={(e) => {
+                setPhone(e.target.value);
+                if (error) setError("");
+              }}
               placeholder="Enter phone number"
               className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
             />
@@ -84,7 +122,10 @@ function AddCustomerModal({ onClose, onAdd }) {
             <input
               type="text"
               value={service}
-              onChange={(e) => setService(e.target.value)}
+              onChange={(e) => {
+                setService(e.target.value);
+                if (error) setError("");
+              }}
               placeholder="Enter Service"
               className="w-full rounded-lg border px-4 py-2.5 outline-none focus:ring-2 focus:ring-blue-500"
             />
