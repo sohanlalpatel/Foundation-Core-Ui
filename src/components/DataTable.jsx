@@ -3,13 +3,19 @@ function DataTable({ columns, data, onRowClick }) {
     <div className="bg-white rounded-xl overflow-hidden">
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
-          {/* Header */}
-          <thead>
+
+           <thead>
             <tr className="border border-slate-200 bg-slate-50">
               {columns.map((column) => (
                 <th
                   key={column.accessor}
-                  className="px-6 py-4 text-left font-semibold text-slate-650"
+                  className="
+                    px-6
+                    py-4
+                    text-left
+                    font-semibold
+                    text-slate-700
+                  "
                 >
                   {column.header}
                 </th>
@@ -17,8 +23,7 @@ function DataTable({ columns, data, onRowClick }) {
             </tr>
           </thead>
 
-          {/* Body */}
-          <tbody>
+           <tbody>
             {data.length > 0 ? (
               data.map((row) => (
                 <tr
@@ -26,7 +31,9 @@ function DataTable({ columns, data, onRowClick }) {
                   onClick={() => onRowClick?.(row)}
                   className="
                     cursor-pointer
-                    hover:bg-slate-50
+                    border-b
+                    border-slate-100
+                    hover:bg-slate-100
                     transition
                   "
                 >
@@ -37,7 +44,7 @@ function DataTable({ columns, data, onRowClick }) {
                     >
                       {column.render
                         ? column.render(row)
-                        : row[column.accessor]}
+                        :row[column.accessor] || "Not available"}
                     </td>
                   ))}
                 </tr>
@@ -46,13 +53,19 @@ function DataTable({ columns, data, onRowClick }) {
               <tr>
                 <td
                   colSpan={columns.length}
-                  className="px-6 py-12 text-center text-slate-500"
+                  className="
+                    px-6
+                    py-12
+                    text-center
+                    text-slate-500
+                  "
                 >
                   No records found.
                 </td>
               </tr>
             )}
           </tbody>
+
         </table>
       </div>
     </div>

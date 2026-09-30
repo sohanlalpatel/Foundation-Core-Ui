@@ -5,14 +5,11 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 function Sidebar({ setIsLoggedIn }) {
   const location = useLocation();
   const navigate = useNavigate();
-
   const [isOpen, setIsOpen] = useState(false);
-
   const handleLogout = () => {
     localStorage.removeItem("isLoggedIn");
     localStorage.removeItem("user");
     setIsLoggedIn(false);
-
     navigate("/login");
   };
 
@@ -57,7 +54,12 @@ function Sidebar({ setIsLoggedIn }) {
           md:translate-x-0
         `}
       >
-        <h1 className="mb-10 text-2xl font-bold">ServiceDesk</h1>
+        <div className="flex items-center gap-3 mb-10">
+          <span className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full bg-blue-400 text-white flex items-center justify-center font-semibold">
+            SD
+          </span>
+          <h1 className="text-2xl font-bold text-slate-800">ServiceDesk</h1>
+        </div>
 
         <nav className="space-y-2 ">
           <Link
@@ -72,7 +74,7 @@ function Sidebar({ setIsLoggedIn }) {
               }
             `}
           >
-            <LayoutDashboard size={20} />
+            <LayoutDashboard size={20} className="text-blue-400" />
             <span>Dashboard</span>{" "}
           </Link>
 
@@ -87,7 +89,7 @@ function Sidebar({ setIsLoggedIn }) {
               }
             `}
           >
-            <UserCheck /> Customers
+            <UserCheck className="text-blue-400" /> Customers
           </Link>
         </nav>
 

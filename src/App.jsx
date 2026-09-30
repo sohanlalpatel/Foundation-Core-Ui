@@ -1,10 +1,8 @@
 import { Navigate, Route, Routes } from "react-router-dom";
 import { useState } from "react";
-
 import Login from "./pages/Login";
 import Dashboard from "./pages/Dashboard";
 import Customers from "./pages/Customers";
-
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(
     localStorage.getItem("isLoggedIn") === "true",

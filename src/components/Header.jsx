@@ -9,7 +9,9 @@ function Header({ title, user }) {
     .toUpperCase();
 
   return (
-    <header className="sticky top-0 z-40  h-16 w-full bg-white border-b flex items-center justify-between px-4 sm:px-6">
+    <header
+      className="sticky top-0 z-40  h-16 w-full bg-white border-b border-slate-400 flex items-center justify-between px-4 sm:px-6"
+    >
       <h2 className="text-lg ml-12 md:ml-0 sm:text-xl font-semibold text-slate-800 truncate">
         {title}
       </h2>
@@ -22,7 +24,7 @@ function Header({ title, user }) {
           </p>
         </div>
 
-        <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full bg-blue-600 text-white flex items-center justify-center font-semibold">
+        <div className="h-9 w-9 sm:h-10 sm:w-10 shrink-0 rounded-full bg-blue-400 text-white flex items-center justify-center font-semibold">
           {initials}
         </div>
       </div>

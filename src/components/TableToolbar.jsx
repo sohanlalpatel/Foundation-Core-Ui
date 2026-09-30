@@ -1,3 +1,5 @@
+import { Search } from "lucide-react";
+
 function TableToolbar({
   search,
   setSearch,
@@ -5,22 +7,25 @@ function TableToolbar({
   filterValue,
   setFilterValue,
   filterOptions = [],
+  sortValue,
+  setSortValue,
+  sortOptions = [],
 }) {
   return (
     <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3">
-      {/* Search */}
-      <div className="relative w-full lg:w-80">
+
+       <div className="relative w-full lg:w-80">
         <span
           className="
-          absolute
-          left-3
-          top-1/2
-          -translate-y-1/2
-          text-slate-400
-          text-sm
-        "
+            absolute
+            left-3
+            top-1/2
+            -translate-y-1/2
+            text-slate-400
+            text-sm
+          "
         >
-          🔍
+          <Search size={18}/>
         </span>
 
         <input
@@ -49,36 +54,69 @@ function TableToolbar({
         />
       </div>
 
-      {/* Filter */}
-      {filterOptions.length > 0 && (
-        <select
-          value={filterValue}
-          onChange={(e) => setFilterValue(e.target.value)}
-          className="
-            w-full
-            lg:w-auto
-            rounded-lg
-            border
-            border-slate-200
-            bg-white
-            px-4
-            py-2.5
-            text-sm
-            text-slate-600
-            outline-none
-            cursor-pointer
-            focus:border-blue-500
-            focus:ring-2
-            focus:ring-blue-100
-          "
-        >
-          {filterOptions.map((option) => (
-            <option key={option.value} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
-      )}
+       <div className="flex flex-col sm:flex-row gap-3">
+
+         {filterOptions.length > 0 && (
+          <select
+            value={filterValue}
+            onChange={(e) => setFilterValue(e.target.value)}
+            className="
+              w-full
+              sm:w-auto
+              rounded-lg
+              border
+              border-slate-200
+              bg-white
+              px-4
+              py-2.5
+              text-sm
+              text-slate-600
+              outline-none
+              cursor-pointer
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-100
+            "
+          >
+            {filterOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
+
+         {sortOptions.length > 0 && (
+          <select
+            value={sortValue}
+            onChange={(e) => setSortValue(e.target.value)}
+            className="
+              w-full
+              sm:w-auto
+              rounded-lg
+              border
+              border-slate-200
+              bg-white
+              px-4
+              py-2.5
+              text-sm
+              text-slate-600
+              outline-none
+              cursor-pointer
+              focus:border-blue-500
+              focus:ring-2
+              focus:ring-blue-100
+            "
+          >
+            {sortOptions.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
+
+      </div>
     </div>
   );
 }

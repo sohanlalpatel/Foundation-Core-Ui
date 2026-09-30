@@ -1,13 +1,12 @@
 import { useEffect, useState } from "react";
 import { customers as initialCustomers } from "../data/customers";
-
 import PageHeader from "../components/PageHeader";
 import TableToolbar from "../components/TableToolbar";
 import DataTable from "../components/DataTable";
 import StatusBadge from "../components/StatusBadge";
-
 import AddCustomerModal from "../components/AddCustomerModal";
 import CustomerModal from "../components/CustomerModal";
+import { EyeIcon, Trash2 } from "lucide-react";
 
 function Customers() {
   const [customers, setCustomers] = useState(initialCustomers);
@@ -27,29 +26,79 @@ function Customers() {
   }, []);
 
  
-  const filteredCustomers = customers.filter((customer) => {
-    const searchText = search.toLowerCase().trim();
+ const filteredCustomers = customers.filter((customer) => {
+   const searchText = search.toLowerCase().trim();
 
-    const matchesSearch =
-      customer.name.toLowerCase().includes(searchText) ||
-      customer.email.toLowerCase().includes(searchText) ||
-      customer.phone.includes(searchText);
+   const name = customer.name?.toLowerCase() || "";
+   const email = customer.email?.toLowerCase() || "";
+   const phone = customer.phone || "";
 
-    const matchesStatus = status === "All" || customer.status === status;
-    return matchesSearch && matchesStatus;
-  });
+   const matchesSearch =
+     name.includes(searchText) ||
+     email.includes(searchText) ||
+     phone.includes(searchText);
+
+   const matchesStatus = status === "All" || customer.status === status;
+
+   return matchesSearch && matchesStatus;
+ });
 
  
-  const addCustomer = (newCustomer) => {
-    setCustomers((currentCustomers) => [...currentCustomers, newCustomer]);
-    setShowAddModal(false);
-    setSuccessMessage("Customer added successfully.");
-    setTimeout(() => {
-      setSuccessMessage("");
-    }, 3000);
+const addCustomer = (newCustomer) => {
+  const emailExists = customers.some(
+    (customer) =>
+      customer.email.toLowerCase().trim() ===
+      newCustomer.email.toLowerCase().trim(),
+  );
+
+  if (emailExists) {
+    return {
+      success: false,
+      message: "A customer with this email already exists.",
+    };
+  }
+
+  setCustomers((currentCustomers) => [...currentCustomers, newCustomer]);
+
+  setShowAddModal(false);
+
+  setSuccessMessage("Customer added successfully.");
+
+  setTimeout(() => {
+    setSuccessMessage("");
+  }, 3000);
+
+  return {
+    success: true,
   };
+};
 
- 
+ const deleteCustomer = (customerId) => {
+   const customer = customers.find((customer) => customer.id === customerId);
+
+   if (!customer) return;
+
+   const confirmDelete = window.confirm(
+     `Are You sure, you want to delete ${customer.name}?`,
+   );
+
+   if (!confirmDelete) return;
+
+   setCustomers((currentCustomers) =>
+     currentCustomers.filter((customer) => customer.id !== customerId),
+   );
+
+   if (selectedCustomer?.id === customerId) {
+     setSelectedCustomer(null);
+   }
+
+   setSuccessMessage("Customer deleted Successfully.");
+
+   setTimeout(() => {
+     setSuccessMessage("");
+   }, 3000);
+ };
+
   const customerColumns = [
     {
       header: "Name",
@@ -78,19 +127,31 @@ function Customers() {
       accessor: "action",
 
       render: (customer) => (
-        <button
-          onClick={() => {e.stopPropagation(); 
-            setSelectedCustomer(customer)}}
-          className="
+        <div className="flex items-center gap-3">
+          <button
+            onClick={(e) => {
+              e.stopPropagation();
+              setSelectedCustomer(customer);
+            }}
+            className="
             text-sm
             font-medium
             text-blue-600
             hover:text-blue-700
             transition
           "
-        >
-          View Details
-        </button>
+          >
+            <EyeIcon size={16}/>
+          </button>
+
+          <button onClick={(e)=>{
+            e.stopPropagation();
+            deleteCustomer(customer.id);
+          }} 
+          className="text-sm text-red-400 font-medium">
+            <Trash2 size={16}/>
+          </button>
+        </div>
       ),
     },
   ];
@@ -130,7 +191,7 @@ function Customers() {
         />
         {successMessage && (
           <div
-            className="mb-5 flex  items-center justify-between rounded-lg  border border-green-200 bg-green-50 px-4 py-3  text-s text-green-700">
+            className="mb-5 flex  items-center justify-between rounded-lg  border border-green-200 bg-green-50 px-4 py-3  text-sm text-green-700">
             <span>{successMessage}</span>
 
             <button
@@ -194,9 +255,6 @@ function Customers() {
             <div className="px-6 py-12 text-center">
               <h3 className="font-medium text-slate-700">No customers found</h3>
 
-              <p className="mt-1 text-sm text-slate-500">
-                Try changing your search or status filter.
-              </p>
             </div>
           )}
         </div>

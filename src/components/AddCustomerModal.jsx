@@ -1,6 +1,6 @@
 import { useState } from "react";
-
-function AddCustomerModal({ onClose, onAdd }) {
+import Button from "./Button";
+function AddCustomerModal({ onClose, onAdd }) {  
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [phone, setPhone] = useState("");
@@ -10,49 +10,52 @@ function AddCustomerModal({ onClose, onAdd }) {
   const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
-  if (!name.trim()) {
-    setError("Name is required.");
-    return;
-  }
+    if (!name.trim()) {
+      setError("Name is required.");
+      return;
+    }
 
-  if (!email.trim()) {
-    setError("Email is required.");
-    return;
-  }
+    if (!email.trim()) {
+      setError("Email is required.");
+      return;
+    }
 
-  if (!email.includes("@")) {
-    setError("Please enter a valid email.");
-    return;
-  }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email.trim())) {
+      setError("Please enter a valid email.");
+      return;
+    }
 
-  if (!phone.trim()) {
-    setError("Phone number is required.");
-    return;
-  }
+    if (!phone.trim()) {
+      setError("Phone number is required.");
+      return;
+    }
 
-  if (!/^[0-9]{10}$/.test(phone)) {
-    setError("Phone number must be 10 digits.");
-    return;
-  }
+    if (!/^[0-9]{10}$/.test(phone)) {
+      setError("Phone number must be 10 digits.");
+      return;
+    }
 
-   if (!service.trim()) {
-     setError("service is required.");
-     return;
-   }
+    if (!service.trim()) {
+      setError("service is required.");
+      return;
+    }
 
- onAdd({
-   id: Date.now(),
-   name: name.trim(),
-   email: email.trim(),
-   phone: phone.trim(),
-   service: service.trim(),
-   status,
- });
+    const result = onAdd({
+      id: Date.now(),
+      name: name.trim(),
+      email: email.trim(),
+      phone: phone.trim(),
+      service: service.trim(),
+      status,
+    });
 
-    // onAdd(newCustomer);
+    if (result?.success === false) {
+      setError(result.message);
+      return;
+    }
+
     onClose();
   };
-
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/40 p-4">
       <div className="w-full max-w-md rounded-xl bg-white p-6 shadow-lg">
@@ -88,9 +91,16 @@ function AddCustomerModal({ onClose, onAdd }) {
           </div>
 
           <div>
-            <label className="mb-1 block text-sm font-medium">Email</label>
+            <label
+              htmlFor="email"
+              className="mb-1 block text-sm font-medium"
+            >
+              Email
+            </label>
+            
 
             <input
+              id="email"
               type="email"
               value={email}
               onChange={(e) => {
@@ -108,6 +118,7 @@ function AddCustomerModal({ onClose, onAdd }) {
             <input
               type="tel"
               value={phone}
+              maxLength={10}
               onChange={(e) => {
                 setPhone(e.target.value);
                 if (error) setError("");
@@ -153,12 +164,12 @@ function AddCustomerModal({ onClose, onAdd }) {
               Cancel
             </button>
 
-            <button
+            <Button
               type="submit"
-              className="rounded-lg bg-blue-600 px-4 py-2.5 text-white hover:bg-blue-700"
+              className=" "
             >
               Add Customer
-            </button>
+            </Button>
           </div>
         </form>
       </div>

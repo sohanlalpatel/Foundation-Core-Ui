@@ -3,45 +3,42 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function Login({ setIsLoggedIn }) {
-    const navigate = useNavigate();
-
+  const navigate = useNavigate();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState("");
 
-const handleLogin = (e) => {
-  e.preventDefault();
+  const handleLogin = (e) => {
+    e.preventDefault();
+    setError("");
 
-  setError("");
+    if (!email) {
+      setError("Email is required.");
+      return;
+    }
 
-  if (!email) {
-    setError("Email is required.");
-    return;
-  }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.trim())) {
+      setError("Please enter a valid email address.");
+      return;
+    }
 
-  if (!email.includes("@")) {
-    setError("Please enter a valid email address.");
-    return;
-  }
+    if (!password) {
+      setError("Password is required.");
+      return;
+    }
 
-  if (!password) {
-    setError("Password is required.");
-    return;
-  }
+    const user = {
+      email: email,
+    };
 
-  const user = {
-     email: email,
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("user", JSON.stringify(user));
+
+    setIsLoggedIn(true);
+    navigate("/dashboard");
   };
-
-  localStorage.setItem("isLoggedIn", "true");
-  localStorage.setItem("user", JSON.stringify(user));
-
-  setIsLoggedIn(true);
-
-   navigate("/dashboard");
- 
-};
 
   return (
     <div className="min-h-screen bg-slate-100 flex items-center justify-center p-5">

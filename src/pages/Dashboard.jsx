@@ -1,13 +1,12 @@
 import Sidebar from "../components/Sidebar";
 import Header from "../components/Header";
 import SummaryCard from "../components/SummaryCard";
-import ServiceRequestTable from "../components/ServiceRequestTable";
 import { serviceRequests } from "../data/serviceRequests";
 import { dashboardData } from "../data/dashboard";
 import { useState } from "react";
 import DataTable from "../components/DataTable";
-import { Link } from "react-router-dom";
 import StatusBadge from "../components/StatusBadge";
+import TableToolbar from "../components/TableToolbar";
  
 function Dashboard({ setIsLoggedIn }) {
   const [dateFilter, setDateFilter] = useState("Today");
@@ -53,23 +52,7 @@ function Dashboard({ setIsLoggedIn }) {
       header: "Date",
       accessor: "date",
     },
-    // {
-    //   header: "Action",
-    //   accessor: "action",
 
-    //   render: (request) => (
-    //     <button
-    //       onClick={() => console.log("View:", request)}
-    //       className="
-    //       text-blue-600
-    //       hover:text-blue-700
-    //       font-medium
-    //     "
-    //     >
-    //       View
-    //     </button>
-    //   ),
-    // },
   ];
 
   const user = JSON.parse(localStorage.getItem("user")) || {
@@ -157,42 +140,44 @@ function Dashboard({ setIsLoggedIn }) {
                 Service Requests
               </h2>
             </div>
+
             <div className="bg-white rounded-xl px-4 py-4 mb-3">
-              <div className="flex flex-col lg:flex-row  lg:items-center lg:justify-between gap-3">
-                <div className="relative w-full lg:w-80">
-                  <input
-                    type="text"
-                    placeholder="Search customer or service"
-                    value={requestSearch}
-                    onChange={(e) => setRequestSearch(e.target.value)}
-                    className="w-full border border-slate-200 rounded-lg px-4 py-2.5 text-sm text-slate-700 placeholder:text-slate-400 outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-100 transition"
-                  />
-                </div>
-
-                <div className="flex flex-col sm:flex-row gap-3">
-                  <select
-                    value={requestStatus}
-                    onChange={(e) => setRequestStatus(e.target.value)}
-                    className="border border-slate-200 rounded-lg px-4 py-2.5 bg-white text-sm text-slate-600 outline-none cursor-pointer focus:border-blue-500 focus:ring-2 focus:ring-blue-100 "
-                  >
-                    <option value="All">All Status</option>
-                    <option value="Pending">Pending</option>
-                    <option value="Completed">Completed</option>
-                  </select>
-
-                  <select
-                    value={sortOrder}
-                    onChange={(e) => setSortOrder(e.target.value)}
-                    className=" border border-slate-200  rounded-lg  px-4 py-2.5 bg-white text-sm text-slate-600 outline-none cursor-pointer focus:border-blue-500 focus:ring-2 focus:ring-blue-100"
-                  >
-                    <option value="newest">Newest First</option>
-                    <option value="oldest">Oldest First</option>
-                  </select>
-                </div>
-              </div>
+              <TableToolbar
+                search={requestSearch}
+                setSearch={setRequestSearch}
+                searchPlaceholder="Search customer or service..."
+                filterValue={requestStatus}
+                setFilterValue={setRequestStatus}
+                filterOptions={[
+                  {
+                    value: "All",
+                    label: "All Status",
+                  },
+                  {
+                    value: "Pending",
+                    label: "Pending",
+                  },
+                  {
+                    value: "Completed",
+                    label: "Completed",
+                  },
+                ]}
+                sortValue={sortOrder}
+                setSortValue={setSortOrder}
+                sortOptions={[
+                  {
+                    value: "newest",
+                    label: "Newest First",
+                  },
+                  {
+                    value: "oldest",
+                    label: "Oldest First",
+                  },
+                ]}
+              />
             </div>
-            {/* <ServiceRequestTable requests={sortedRequests} /> */}
-            <DataTable columns={requestColumns} data={sortedRequests} />{" "}
+
+            <DataTable columns={requestColumns} data={sortedRequests} />
           </div>
         </main>
       </div>
